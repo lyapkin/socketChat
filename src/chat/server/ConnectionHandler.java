@@ -2,44 +2,30 @@ package chat.server;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.LinkedList;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class ConnectionHandler implements Runnable {
-    static private LinkedList<ConnectionHandler> connectionsList = new LinkedList<>();
+    static private final Map<String, ConnectionHandler> connectionsList = new LinkedHashMap<>();
+    static private final Pattern pattern = Pattern.compile("^[a-zA-Z0-9](_(?![_.])|\\.(?![_.])|[a-zA-Z0-9]){2,18}[a-zA-Z0-9]$");
     private String username;
-    private Socket socket;
+    private final Socket socket;
     private BufferedReader reader;
     private BufferedWriter writer;
     private boolean isValid = false;
 
     ConnectionHandler(Socket socket) {
-        try {
-            this.socket = socket;
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            username = reader.readLine();
-        } catch (IOException e) {
-            // Handle exception
-            closeConnection();
-        }
+        this.socket = socket;
     }
 
     @Override
     public void run() {
         try {
-            validate();
-            if (!isValid()) {
-                closeConnection(); // Or throw an exception to close the connection
-                return;
-            }
-            writer.write("success");
-            writer.newLine();
-            writer.flush();
+            initConnection();
         } catch (IOException e) {
             closeConnection();
+            return;
         }
-
-        addConnection();
 
         try {
             String message;
@@ -53,14 +39,42 @@ public class ConnectionHandler implements Runnable {
         }
     }
 
-    private void validate() throws IOException {
-        if (!isValidUsername(username)) {
+    private void initConnection() throws IOException {
+        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        username = reader.readLine();
+
+        ConnectionResponse response = new ConnectionResponse();
+
+        validate(response);
+        if (!isValid()) {
+            closeConnection(); // Or throw an exception to close the connection
+            throw new IOException();
+        }
+
+        writer.write("success");
+        writer.newLine();
+        writer.flush();
+
+        addConnection();
+    }
+
+    private void validate(ConnectionResponse response) throws IOException {
+        isValid = true;
+        response.status = "succeeded";
+        if (!isValidUsername()) {
+            response.status = "failed";
+            response.errorsList.add("Имя " + username + " недопустимой формы.");
             writer.write("Это имя занято. Введите другое имя.");
             writer.newLine();
             writer.flush();
             isValid = false;
-        } else {
-            isValid = true;
+        }
+        if (connectionsList.containsKey(username)) {
+            response.status = "failed";
+            response.errorsList.add("Имя " + username + " сейчас занято.");
+
+            isValid = false;
         }
     }
 
@@ -68,13 +82,16 @@ public class ConnectionHandler implements Runnable {
         return isValid;
     }
 
-    private boolean isValidUsername(String username) {
-        // Implement method
-        return true;
+    private boolean isValidUsername() {
+        if (username != null) {
+            return pattern.matcher(username).matches();
+        }
+
+        return false;
     }
 
     private void broadcast(String message) {
-        for (ConnectionHandler connection : connectionsList) {
+        for (ConnectionHandler connection : connectionsList.values()) {
             if (connection != null && connection != this) {
                 try {
                     connection.writer.write(message);
@@ -88,13 +105,13 @@ public class ConnectionHandler implements Runnable {
     }
 
     private void addConnection() {
-        connectionsList.add(this);
+        connectionsList.put(username, this);
         System.out.println(username + " присоединился к чату.");
         broadcast(username + " присоединился к чату.");
     }
 
     private void removeConnection() {
-        connectionsList.remove(this);
+        connectionsList.remove(username);
         System.out.println(username + " покинул чат.");
         broadcast(username + " покинул чат.");
         closeConnection();
@@ -118,6 +135,11 @@ public class ConnectionHandler implements Runnable {
 
     public boolean isClosed() {
         return socket.isClosed();
+    }
+
+    private static class ConnectionResponse {
+        ArrayList<String> errorsList = new ArrayList<>();
+        String status;
     }
 
 }
