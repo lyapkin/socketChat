@@ -31,7 +31,7 @@ public class Server {
                 serverSocket.close();
             }
         } catch (IOException e) {
-            // Handle exception
+            e.printStackTrace();
         }
     }
 
