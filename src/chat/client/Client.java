@@ -40,7 +40,7 @@ public class Client {
                 response = (JSONObject) parser.parse(getMsg());
 
                 if ((long) response.get("type") != exchngMsgTypes.CONNECTION_RESPONSE) {
-                    // Handle the case
+                    System.out.println("Тип сообщения отличается от CONNECTION_RESPONSE: " + response.get("type"));
                 }
 
                 if (response.get("status").equals("succeeded")) {
@@ -55,12 +55,12 @@ public class Client {
                     closeClient();
                 }
             } catch (IOException e) {
-                // Handle exception
                 e.printStackTrace();
                 if (!socket.isClosed()) {
                     closeClient();
                 }
             } catch (ParseException e) {
+                System.out.println("Проблема с парсингом сообщения.");
                 e.printStackTrace();
             }
 
@@ -98,6 +98,7 @@ public class Client {
                         closeClient();
                     }
                 } catch (ParseException e) {
+                    System.out.println("Проблема с парсингом сообщения.");
                     e.printStackTrace();
                 }
             }

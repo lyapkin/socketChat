@@ -43,6 +43,8 @@ public class ConnectionHandler implements Runnable {
             closeConnection();
             return;
         } catch (ParseException e) {
+            System.out.println("Проблема с парсингом сообщения");
+            e.printStackTrace();
             closeConnection();
             return;
         }
@@ -63,6 +65,7 @@ public class ConnectionHandler implements Runnable {
         JSONObject request = (JSONObject) new JSONParser().parse(getMsg());
 
         if ((long) request.get("type") != exchngMsgTypes.CONNECTION_REQUEST) {
+            System.out.println("Тип сообщенияотличается от CONNECTION_REQUEST: " + request.get("type"));
             ConnectionResponse response = new ConnectionResponse();
             response.failRequest();
             response.addError("Тип запроса от клиента не соответствует ожидаемому.");
@@ -135,7 +138,7 @@ public class ConnectionHandler implements Runnable {
                 }
             }
         } catch (ParseException e) {
-            // handle error
+            System.out.println("Проблема с парсингом ссобщения.");
             e.printStackTrace();
         }
     }
