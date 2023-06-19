@@ -134,6 +134,7 @@ public class ConnectionHandler implements Runnable {
                 handleCommand((String) message.get("command"));
             } else if (type == exchngMsgTypes.MESSAGE) {
                 synchronized (lock) {
+                    send(msg);
                     broadcast(msg);
                 }
             }

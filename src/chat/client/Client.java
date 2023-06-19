@@ -88,7 +88,11 @@ public class Client {
                 try {
                     JSONObject message = (JSONObject) parser.parse(getMsg());
                     if ((long) message.get("type") == exchngMsgTypes.MESSAGE) {
-                        System.out.println(message.get("sender") + ": " + message.get("message"));
+                        if (message.get("sender").equals(username)) {
+                            System.out.println(message.get("sender") + " (ты): " + message.get("message"));
+                        } else {
+                            System.out.println(message.get("sender") + ": " + message.get("message"));
+                        }
                     } else if ((long) message.get("type") == exchngMsgTypes.SERVER_MESSAGE) {
                         System.out.println(message.get("message"));
                     }
@@ -116,7 +120,6 @@ public class Client {
                     send(new Message(username, message).prepareToSend());
                     System.out.print("\033[1A");
                     System.out.print("\033[2K");
-                    System.out.println(username + " (ты): " + message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

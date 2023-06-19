@@ -9,7 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a45fa589-3047-4072-9f4f-a160908881c6" name="Changes" comment="." />
+    <list default="true" id="a45fa589-3047-4072-9f4f-a160908881c6" name="Changes" comment=".">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chat/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chat/client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chat/server/ConnectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chat/server/ConnectionHandler.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,7 +73,7 @@
       <recent name="chat.client" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Server">
+  <component name="RunManager" selected="Application.Client">
     <configuration name="Client" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chat.client.Client" />
       <module name="socketChat" />
@@ -153,6 +157,9 @@
       <workItem from="1686815540656" duration="15511000" />
       <workItem from="1686908240110" duration="3324000" />
       <workItem from="1686997815166" duration="5194000" />
+      <workItem from="1687063238884" duration="914000" />
+      <workItem from="1687083937108" duration="601000" />
+      <workItem from="1687150175006" duration="1035000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1679119877488</created>
@@ -182,7 +189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687018036651</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary=".">
+      <created>1687064061714</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1687064061714</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
